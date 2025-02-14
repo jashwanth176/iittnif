@@ -2,10 +2,18 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { HiOutlineLogout, HiOutlineMoon, HiOutlineSun } from 'react-icons/hi';
+import { auth } from '@/lib/firebase';
 
 export default function Header() {
   const [isDark, setIsDark] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/login');
+  };
 
   return (
     <header className="border-b border-secondary/20 py-4 mb-8">
@@ -31,7 +39,7 @@ export default function Header() {
               <HiOutlineMoon className="w-5 h-5" />
             )}
           </button>
-          <button className="btn-primary">
+          <button onClick={handleLogout} className="btn-primary">
             <HiOutlineLogout className="w-5 h-5" />
             Logout
           </button>
