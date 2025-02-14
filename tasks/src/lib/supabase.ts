@@ -15,7 +15,6 @@ export const signInToSupabase = async () => {
   const user = auth.currentUser;
   if (!user) return;
 
-  // Set the Supabase auth context with the user ID
   supabase.auth.setSession({
     access_token: user.uid,
     refresh_token: '',

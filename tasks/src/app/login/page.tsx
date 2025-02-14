@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { auth } from '@/lib/firebase';
 import { 
   signInWithEmailAndPassword, 
@@ -57,7 +58,17 @@ export default function LoginPage() {
   return (
     <>
       <AnimatedBackground />
-      <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 relative z-10">
+        <div className="mb-8">
+          <Image
+            src="/images/IITT_InIf_svg2-01.png"
+            alt="IITT Logo"
+            width={300}
+            height={80}
+            className="h-20 w-auto"
+            priority
+          />
+        </div>
         <div className="w-full max-w-md">
           <div className="bg-white/20 backdrop-blur-[2px] rounded-2xl p-8 shadow-lg">
             <h1 className="text-2xl font-bold text-primary mb-6">

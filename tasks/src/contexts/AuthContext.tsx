@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '@/lib/firebase';
 import { User } from 'firebase/auth';
 import { signInToSupabase } from '@/lib/supabase';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const AuthContext = createContext<{ user: User | null }>({ user: null });
 
@@ -24,7 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (loading) {
-    return <div className="h-screen flex items-center justify-center">Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

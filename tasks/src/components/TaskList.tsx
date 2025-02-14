@@ -30,7 +30,7 @@ export default function TaskList() {
       if (!user) return;
       setLoading(true);
       const tasks = await taskService.getTasks();
-      setTasks(tasks.filter(task => task.user_id === user.uid));
+      setTasks(tasks.filter((task: Task) => task.user_id === user.uid));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load tasks');
     } finally {
@@ -54,9 +54,9 @@ export default function TaskList() {
     }
   };
 
-  const handleToggleComplete = async (id: string, completed: boolean) => {
+  const handleToggleComplete = async (id: string) => {
     try {
-      const updatedTask = await taskService.toggleComplete(id, !completed);
+      const updatedTask = await taskService.toggleComplete(id);
       setTasks(prev => prev.map(task =>
         task.id === id ? { ...updatedTask, status: updatedTask.status } : task
       ).sort((a, b) => {
@@ -156,7 +156,7 @@ export default function TaskList() {
             {tasks.map((task) => (
               <div key={task.id} className={`task-item ${task.status === 'completed' ? 'task-completed' : ''}`}>
                 <button
-                  onClick={() => handleToggleComplete(task.id, task.status === 'completed')}
+                  onClick={() => handleToggleComplete(task.id)}
                   className="btn-icon"
                 >
                   <HiCheck className={`w-5 h-5 transition-all duration-200 ${
@@ -172,7 +172,7 @@ export default function TaskList() {
                     <input
                       ref={editInputRef}
                       type="text"
-                      className="input-primary"
+                      className="input-primary relative z-50 bg-white"
                       defaultValue={task.title}
                       onBlur={(e) => handleUpdate(task.id, e.target.value)}
                       onKeyDown={(e) => {

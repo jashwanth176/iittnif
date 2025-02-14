@@ -1,5 +1,3 @@
-import { supabase } from '@/lib/supabase';
-
 export interface Task {
   id: string;
   title: string;
@@ -15,74 +13,43 @@ export interface Task {
 
 export const taskService = {
   async getTasks() {
-    const { data, error } = await supabase
-      .from('tasks')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data as Task[];
+    const response = await fetch('/api/tasks');
+    if (!response.ok) throw new Error('Failed to fetch tasks');
+    return response.json();
   },
 
   async createTask(title: string, userId: string, description?: string) {
-    try {
-      const { data, error } = await supabase
-        .from('tasks')
-        .insert([{ 
-          title, 
-          user_id: userId,
-          description,
-          status: 'pending'
-        }])
-        .select()
-        .single();
-      
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(error.message);
-      }
-      
-      if (!data) {
-        throw new Error('No data returned from Supabase');
-      }
-      
-      return data as Task;
-    } catch (err) {
-      console.error('Create task error:', err);
-      throw err;
-    }
+    const response = await fetch('/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, user_id: userId, description }),
+    });
+    if (!response.ok) throw new Error('Failed to create task');
+    return response.json();
   },
 
   async updateTask(id: string, updates: Partial<Task>) {
-    const { data, error } = await supabase
-      .from('tasks')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data as Task;
+    const response = await fetch(`/api/tasks/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    });
+    if (!response.ok) throw new Error('Failed to update task');
+    return response.json();
   },
 
   async deleteTask(id: string) {
-    const { error } = await supabase
-      .from('tasks')
-      .delete()
-      .eq('id', id);
-    
-    if (error) throw error;
+    const response = await fetch(`/api/tasks/${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) throw new Error('Failed to delete task');
   },
 
-  async toggleComplete(id: string, completed: boolean) {
-    const { data, error } = await supabase
-      .from('tasks')
-      .update({ status: completed ? 'completed' : 'pending' })
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data as Task;
+  async toggleComplete(id: string) {
+    const response = await fetch(`/api/tasks/${id}/complete`, {
+      method: 'PATCH',
+    });
+    if (!response.ok) throw new Error('Failed to toggle task');
+    return response.json();
   }
 }; 
