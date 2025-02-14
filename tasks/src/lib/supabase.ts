@@ -19,6 +19,5 @@ export const signInToSupabase = async () => {
   supabase.auth.setSession({
     access_token: user.uid,
     refresh_token: '',
-    expires_in: 3600
   });
 }; 
