@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 224 71% 4%;
+  
+  /* Darker primary color for better contrast */
+  --primary: 351 48% 20%;  /* Changed to match the deep red */
+  --primary-foreground: 0 0% 100%;
+  
+  /* Cool gray secondary */
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 220 25% 26%;
+  
+  /* Deep red for destructive actions */
+  --destructive: 351 69% 35%;  /* #951b2a */
+  --destructive-foreground: 210 40% 98%;
+  
+  /* Gradient colors */
+  --gradient-start: 43 24% 65%;  /* #c2b28a */
+  --gradient-end: 351 69% 35%;   /* #951b2a */
+}
+
+/* Add gradient animation */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--gradient-start) / 0.05),
+    hsl(var(--gradient-end) / 0.05)
+  );
+  background-size: 400% 400%;
+  animation: gradientFlow 15s ease infinite;
+}
+
+.dark {
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+  
+  /* Slightly brighter gold for dark mode */
+  --primary: 43 24% 70%;
+  --primary-foreground: 0 0% 100%;
+  
+  /* Darker secondary for dark mode */
+  --secondary: 220 32% 17%;
+  --secondary-foreground: 210 40% 98%;
+  
+  /* Slightly brighter red for dark mode */
+  --destructive: 351 69% 40%;
+  --destructive-foreground: 210 40% 98%;
+}
+
+/* Custom components */
+@layer components {
+  .input-primary {
+    @apply w-full px-3 sm:px-4 py-2 bg-white/30 backdrop-blur-[2px] border border-secondary/30 rounded-lg;
+    @apply focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary text-primary-foreground rounded-lg;
+    @apply hover:bg-primary/90 transition-all duration-200;
+  }
+  
+  .btn-icon {
+    @apply p-2 rounded-lg text-primary hover:bg-secondary/20 transition-all duration-200;
+  }
+
+  .task-card {
+    @apply backdrop-blur-[2px] bg-white/30 rounded-lg shadow-sm;
+    @apply hover:shadow-md transition-all duration-200;
+  }
+
+  .task-item {
+    @apply py-3 sm:py-4 flex items-center gap-2 sm:gap-4;
+    transform-origin: center;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .task-item-enter {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .task-item-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .task-item-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .task-item-exit-active {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  .task-completed {
+    @apply opacity-75;
+    animation: moveToBottom 0.5s ease-in-out;
+  }
+}
+
+/* Simplified blur animation */
+@keyframes subtleFloat {
+  0%, 100% {
+    backdrop-filter: blur(2px);
+  }
+  50% {
+    backdrop-filter: blur(3px);
+  }
+}
+
+.backdrop-blur-sm {
+  animation: subtleFloat 4s ease-in-out infinite;
+}
+
+@keyframes moveToBottom {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(20px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.75;
+  }
+}
