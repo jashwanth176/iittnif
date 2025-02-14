@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '@/lib/firebase';
 import { User } from 'firebase/auth';
+import { signInToSupabase } from '@/lib/supabase';
 
 const AuthContext = createContext<{ user: User | null }>({ user: null });
 
@@ -11,8 +12,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
+      if (user) {
+        await signInToSupabase();
+      }
       setLoading(false);
     });
 
