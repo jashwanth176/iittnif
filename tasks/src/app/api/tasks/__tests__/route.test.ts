@@ -2,6 +2,9 @@ import { GET, POST } from '../route';
 import { supabase } from '@/lib/supabase';
 import { NextRequest } from 'next/server';
 
+// Add a base URL constant that can be configured via environment variable
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 describe('Tasks API Routes', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -71,7 +74,7 @@ describe('Tasks API Routes', () => {
         })
       });
 
-      const request = new NextRequest('http://localhost:3000/api/tasks', {
+      const request = new NextRequest(`${BASE_URL}/api/tasks`, {
         method: 'POST',
         body: JSON.stringify(newTask)
       });
