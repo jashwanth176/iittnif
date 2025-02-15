@@ -9,6 +9,7 @@ import {
 } from 'react-icons/hi2';
 import { taskService, Task } from '@/services/taskService';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -51,11 +52,18 @@ export default function TaskList() {
     if (!newTask.trim() || !user) return;
     
     try {
-      setError(null); // Clear any previous errors
-      const task = await taskService.createTask(newTask, user.uid);
+      setError(null);
+      // Show loading state for the input
+      setNewTask(prev => prev + ' (Adding...)');
+      const task = await taskService.createTask(newTask.replace(' (Adding...)', ''), user.uid);
       if (task) {
         setTasks(prev => [task, ...prev]);
         setNewTask('');
+        // Show success feedback
+        toast.success('Task added successfully!', {
+          position: "top-right",
+          autoClose: 2000,
+        });
       }
     } catch (err) {
       console.error('Add task error:', err);
@@ -65,7 +73,13 @@ export default function TaskList() {
 
   const handleToggleComplete = async (id: string) => {
     try {
-      const updatedTask = await taskService.toggleComplete(id);
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      
+      // Toggle between 'completed' and 'pending'
+      const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+      const updatedTask = await taskService.updateTask(id, { status: newStatus });
+      
       setTasks(prev => prev.map(task =>
         task.id === id ? { ...updatedTask, status: updatedTask.status } : task
       ).sort((a, b) => {
@@ -139,26 +153,26 @@ export default function TaskList() {
           </div>
 
           {/* Add Task Input */}
-          <div className="flex flex-col sm:flex-row gap-2">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            handleAddTask();
+          }} className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               placeholder="What needs to be done?"
               className="input-primary"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleAddTask();
-                }
-              }}
+              disabled={newTask.includes('(Adding...)')}
             />
             <button
-              onClick={handleAddTask}
+              type="submit"
               className="btn-primary w-full sm:w-auto justify-center"
+              disabled={newTask.includes('(Adding...')}
             >
-              Add Task
+              {newTask.includes('(Adding...)') ? 'Adding...' : 'Add Task'}
             </button>
-          </div>
+          </form>
 
           {/* Task List */}
           <div className="divide-y divide-secondary/10">
