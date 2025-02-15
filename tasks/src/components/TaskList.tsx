@@ -30,7 +30,16 @@ export default function TaskList() {
       if (!user) return;
       setLoading(true);
       const tasks = await taskService.getTasks();
-      setTasks(tasks.filter((task: Task) => task.user_id === user.uid));
+      const filteredTasks = tasks
+        .filter((task: Task) => task.user_id === user.uid)
+        .sort((a: Task, b: Task) => {
+          // Sort completed tasks to the end
+          if (a.status === 'completed' && b.status !== 'completed') return 1;
+          if (a.status !== 'completed' && b.status === 'completed') return -1;
+          // For tasks with the same status, sort by creation date (newest first)
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+      setTasks(filteredTasks);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load tasks');
     } finally {
@@ -115,7 +124,7 @@ export default function TaskList() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
       <div className="bg-white/20 backdrop-blur-[2px] rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg">
         <div className="space-y-4 sm:space-y-6">
           {error && (

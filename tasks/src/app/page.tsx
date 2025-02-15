@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'react-toastify';
 import Header from '@/components/Header';
 import TaskList from '@/components/TaskList';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -19,6 +20,14 @@ export default function Home() {
       // Add a small delay to show the loading animation
       const timer = setTimeout(() => {
         setIsLoading(false);
+        toast.success(`Welcome back, ${user.displayName || 'User'}! 👋`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }, 1000);
       return () => clearTimeout(timer);
     }
