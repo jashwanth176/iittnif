@@ -71,7 +71,6 @@ npm install
 ```bash
 npm run dev
 ```
-
 sql 
 
 create table tasks (
@@ -130,3 +129,45 @@ Test files location:
 - `npm test`: Runs tests
 - `npm run test:watch`: Runs tests in watch mode
 - `npm run test:coverage`: Generates test coverage report
+
+## Design Decisions
+
+### 1. Authentication & Database
+- Firebase Authentication for secure user management
+- Supabase as the database layer for real-time capabilities and SQL support
+- Separation of auth and data concerns for better maintainability
+
+### 2. UI/UX Design
+- Animated background with interactive particles (see `AnimatedBackground.tsx`)
+- Dark/Light mode support with smooth transitions
+- Responsive design using Tailwind CSS
+- Custom color scheme using IITNIF logo colors:
+  - Primary: Deep red (#951b2a)
+  - Secondary: Gold/beige (#c2b28a)
+  - Dynamic opacity and blur effects for depth
+
+### 3. Architecture
+- Next.js App Router for modern React patterns
+- Client-side state management with React Context
+- API Routes for backend functionality
+- Zod for runtime type validation
+- Jest for comprehensive testing
+
+### 4. Performance Optimizations
+- Dynamic imports for code splitting
+- Optimized canvas rendering for animations
+- Debounced user interactions
+- Efficient task sorting and filtering
+
+### 5. Developer Experience
+- TypeScript for type safety
+- ESLint and Prettier for code consistency
+- Comprehensive test coverage
+- Environment variable management
+- Clear project structure
+
+### 6. Security Measures
+- Server-side validation of all requests
+- Protected API routes
+- Secure authentication flows
+- Environment variable protection
