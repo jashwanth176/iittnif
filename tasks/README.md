@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Management Application
 
-## Getting Started
+Built with Next.js, Firebase Authentication, and Supabase database.
 
-First, run the development server:
+Check it out at : iittnif.vercel.app
+
+## Features
+
+- User authentication (Email/Password and Google Sign-in)
+- Create, read, update, and delete tasks
+- Mark tasks as complete/incomplete
+- Dark mode support
+- Responsive design
+- Real-time validation
+- Error handling
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Firebase account
+- Supabase account
+
+## Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+Firebase:
+
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- `NEXT_PUBLIC_FIREBASE_APP_ID`
+
+Firebase Admin: 
+
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY`
+
+Supabase:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+Feel Free to use the following : 
+
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzbWhpZHpwZmNsa2xwcXpjbHBkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk1NjY0MzAsImV4cCI6MjA1NTE0MjQzMH0.c2xqqDKwHqw2zXL7pf7-WgIe_GUhODFgQZjFIlZjOGU`
+- `NEXT_PUBLIC_SUPABASE_URL=https://dsmhidzpfclklpqzclpd.supabase.co`
+
+
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone add link here
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+sql 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+create table tasks (
+id uuid default uuid_generate_v4() primary key,
+title text not null,
+description text,
+status text default 'pending',
+user_id text not null,
+created_at timestamp with time zone default timezone('utc'::text, now()),
+updated_at timestamp with time zone default timezone('utc'::text, now())
+);
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## API Tests
 
-To learn more about Next.js, take a look at the following resources:
+The application includes comprehensive API tests using Jest. Run tests with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm test
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+### Test Coverage
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. GET /api/tasks
+- Returns tasks sorted by creation date
+- Handles database errors appropriately
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. POST /api/tasks
+- Creates new tasks with validation
+- Handles duplicate tasks
+- Validates required fields
+
+3. PATCH /api/tasks/[id]/complete
+- Marks tasks as completed
+- Handles non-existent tasks
+- Handles database errors
+
+4. PUT /api/tasks/[id]
+- Updates task details
+- Validates input data
+- Handles non-existent tasks
+
+Test files location:
+
+- `src/api/tasks.test.ts`
+- `src/components/TaskForm.test.tsx`
+- `src/components/TaskList.test.tsx`
+
+
+## Available Scripts
+
+- `npm run dev`: Starts development server
+- `npm run build`: Builds the application
+- `npm start`: Starts production server
+- `npm test`: Runs tests
+- `npm run test:watch`: Runs tests in watch mode
+- `npm run test:coverage`: Generates test coverage report
